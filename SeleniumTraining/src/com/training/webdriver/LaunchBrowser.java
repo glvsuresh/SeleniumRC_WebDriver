@@ -1,5 +1,8 @@
 package com.training.webdriver;
 
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -13,14 +16,12 @@ public class LaunchBrowser {
 	
 	
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws InterruptedException,IOException {
 		LaunchBrowser oTest = new LaunchBrowser();
 		oTest.openBrowser(sBrowserName);
 		oTest.navigateToURL(sURL);
+		oTest.getTitle();
 		oTest.closeBrowser();
-		oTest.launchIE();
-		oTest.launchChrome();
-		oTest.launchFirefox();
 	}
 
 	public void launchIE() {
@@ -38,9 +39,9 @@ public class LaunchBrowser {
 	}
 
 	public void launchFirefox() {
-		System.setProperty("webdriver.gecko.driver",
+    	System.setProperty("webdriver.gecko.driver",
 				"E:/SeleniumLibs/geckodriver.exe");
-		oBrowser = new FirefoxDriver();
+    	oBrowser = new FirefoxDriver();
 		oBrowser.get("http://www.google.com");
 	}
 
@@ -61,10 +62,9 @@ public class LaunchBrowser {
 		}
 		case "FF":
 		case "FIREFOX": {
-			System.setProperty("webdriver.gecko.driver",
-					"E:/SeleniumLibs/geckodriver.exe");
+			System.setProperty("webdriver.gecko.driver","E:/SeleniumLibs/geckodriver.exe");
 			oBrowser = new FirefoxDriver();
-			oBrowser.get("http://www.google.com");
+			break;
 		}
 		default: {
 			System.setProperty("webdriver.chrome.driver",
@@ -79,15 +79,21 @@ public class LaunchBrowser {
 		//First Way to navigate
 		oBrowser.get(sURL);
 		//Second way to navigate
-		oBrowser.navigate().to(sURL);
+		/*oBrowser.navigate().to(sURL);
 		oBrowser.navigate().back();
 		oBrowser.navigate().forward();
-		oBrowser.navigate().refresh();
+		oBrowser.navigate().refresh();*/
 		oBrowser.manage().window().maximize();
+		oBrowser.manage().timeouts().implicitlyWait(60, TimeUnit.SECONDS);
+		oBrowser.manage().timeouts().pageLoadTimeout(60, TimeUnit.SECONDS);
+		oBrowser.manage().timeouts().setScriptTimeout(60, TimeUnit.SECONDS);
 	}
 	
-	
-	
+	public void getTitle()
+	{
+		System.out.println(oBrowser.getTitle());
+		System.out.println(oBrowser.getCurrentUrl());
+	}
 
 	public void closeBrowser() {
 		oBrowser.close();
